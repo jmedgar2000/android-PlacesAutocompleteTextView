@@ -472,19 +472,33 @@ class AndroidPlacesApiJsonParser implements PlacesApiJsonParser {
 
         reader.beginObject();
         while (reader.hasNext()) {
-            switch (reader.nextName()) {
-                case "lat":
-                    lat = reader.nextDouble();
-                    break;
-                case "lng":
-                    lng = reader.nextDouble();
-                    break;
-                default:
-                    reader.skipValue();
-                    break;
+            {
+                switch (reader.nextName())
+                {
+                    case "location":
+                        reader.beginObject();
+                        while (reader.hasNext()) {
+                            switch (reader.nextName()) {
+                                case "lat":
+                                    lat = reader.nextDouble();
+                                    break;
+                                case "lng":
+                                    lng = reader.nextDouble();
+                                    break;
+                                default:
+                                    reader.skipValue();
+                                    break;
+                            }
+                        }
+                        reader.endObject();
+                        break;
+                    default:
+                        reader.skipValue();
+                }
             }
         }
         reader.endObject();
+
         return new PlaceGeometry(new PlaceLocation(lat, lng));
     }
 
